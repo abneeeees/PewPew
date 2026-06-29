@@ -1,4 +1,4 @@
-import type { GamesPage, MenuItemProps } from "./types";
+import type { Game, GamesPage, MenuItemProps } from "./types";
 
 export async function getGames(page = 1): Promise<GamesPage> {
   const RAWG_api_key = process.env.RAWG;
@@ -18,6 +18,35 @@ export async function getGames(page = 1): Promise<GamesPage> {
     currentPage: page,
     previousPage: page > 1 ? `?page=${page - 1}` : null,
     nextPage: data.next ? `?page=${page + 1}` : null,
+  };
+}
+
+export async function eachGame(slug: string): Promise<Game | null> {
+  const RAWG_api_key = process.env.RAWG;
+  const response = await fetch(
+    `https://api.rawg.io/api/games/${slug}?key=${RAWG_api_key}`
+  );
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch game");
+  }
+
+  const data = await response.json();
+
+  return {
+    id: data.id,
+    slug: data.slug,
+    description: data.description,
+    background_image: data.background_image,
+    name: data.name,
+    released: data.released,
+    rating: data.rating,
+    metacritic: data.metacritic,
+    platforms: data.platforms,
   };
 }
 
