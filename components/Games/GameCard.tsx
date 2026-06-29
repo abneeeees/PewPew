@@ -1,4 +1,3 @@
-import { StringNullableFilter } from "@/generated/prisma/commonInputTypes";
 import type { Game } from "@/lib/types";
 import Image from "next/image";
 
@@ -10,20 +9,17 @@ export default function GameCard({ game }: GameCardProps) {
   return (
     <>
       <a
-        href="#"
+        href={`/games/${game.slug}`}
         className="group relative block aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-surface-raised shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
       >
         <Image
           src={game.background_image}
-          alt={game.name}
+          alt={game.slug}
           fill
           sizes="(max-width:768px) 50vw, (max-width:1280px) 25vw, 20vw"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
         />
-  
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/40" />
   
         {/* Gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
@@ -31,7 +27,7 @@ export default function GameCard({ game }: GameCardProps) {
         {/* Content */}
         <div className="absolute inset-x-0 bottom-0 z-10 p-4">
           <h3 className="line-clamp-2 text-base font-semibold text-white">
-            {game.name}
+            {game.slug}
           </h3>
   
           <div className="mt-2 flex items-center justify-between text-sm">
