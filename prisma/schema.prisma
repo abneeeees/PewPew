@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum GameStatus {
+  WISHLIST
+  BACKLOG
+  PLAYING
+  COMPLETED
+  DROPPED
+  PAUSED
+}
+
+model User {
+  user_id     String   @id @default(uuid())
+  username    String?
+  email       String   @unique
+  bio         String?
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+
+  userGames   UserGame[]
+  ratings     Rating[]
+}
+
+model Game {
+  game_id         String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  description     String?
+  release_date    DateTime?
+  cover_image     String?
+  rating_average  Float    @default(0)
+  rating_count    Int      @default(0)
+
+  userGames       UserGame[]
+  ratings         Rating[]
+}
+
+model UserGame {
+  id              String     @id @default(uuid())
+
+  userId          String
+  gameId          String
+
+  user            User       @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  game            Game       @relation(fields: [gameId], references: [game_id], onDelete: Cascade)
+
+  status          GameStatus
+  favorite        Boolean    @default(false)
+  hours_played    Int?
+
+  started_at      DateTime?
+  finished_at     DateTime?
+
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
+
+  @@unique([userId, gameId])
+}
+
+model Rating {
+  id              String     @id @default(uuid())
+
+  userId          String
+  gameId          String
+
+  user            User       @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  game            Game       @relation(fields: [gameId], references: [game_id], onDelete: Cascade)
+
+  rating          Float
+  review          String?
+  likes           Int        @default(0)
+
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
+
+  @@unique([userId, gameId])
+}
