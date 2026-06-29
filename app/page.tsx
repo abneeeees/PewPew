@@ -15,7 +15,6 @@ export default async function Home({
     <AppShell>
       <div className="flex flex-col">
         <Hero />
-        <FilterBar totalCount={100} />
         <GameGrid page={currentPage} />
       </div>
     </AppShell>
