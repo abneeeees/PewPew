@@ -1,6 +1,5 @@
 import AppShell from "@/components/AppShell";
 import GameGrid from "@/components/Games/GameGrid";
-import Section from "@/components/UI/Section";
 
 export default async function GamesPage({
   searchParams,
