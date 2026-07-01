@@ -52,6 +52,8 @@ export async function eachGame(slug: string): Promise<Game | null> {
     platforms: data.platforms,
     stores: data.stores,
     ratings: data.ratings,
+    publishers: data.publishers,
+    website: data.website,
   };
 }
 

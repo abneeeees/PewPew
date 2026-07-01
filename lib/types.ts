@@ -1,3 +1,5 @@
+import { Url } from "next/dist/shared/lib/router/router";
+
 export type Requirements = {
   minimum?: string;
   recommended?: string;
@@ -41,6 +43,8 @@ export type Game = {
   platforms: Platform[];
   stores: Store[];
   ratings: ratings[];
+  publishers: string[];
+  website?: Url;
 };
 
 // interface for games page

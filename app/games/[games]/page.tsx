@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PieChart } from '@mui/x-charts/PieChart';
+import Footer from "@/components/Global/Footer";
+
 
 export async function generateMetadata({
   params,
@@ -58,18 +59,23 @@ export default async function GamePage({
           <div className="relative flex h-full flex-col justify-end px-4 pb-8 sm:px-6 lg:px-8">
             <Link
               href="/games"
-              className="mb-55 inline-flex w-fit items-center gap-1 text-sm text-muted transition-colors hover:text-foreground"
+              className="mt-10 mb-45 inline-flex w-fit items-center gap-1 text-sm text-muted transition-colors hover:text-foreground"
             >
               ← Back to games
             </Link>
-  
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+
+          <Link
+            href={`${game.website}`}
+            className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
+          >
+            <h1 className="text-3xl font-bold tracking-tight text-foreground/90 sm:text-4xl lg:text-5xl hover:text-white">
               {game.name}
             </h1>
+          </Link>
   
             <div className="mt-4 flex flex-wrap items-center gap-3">
               {game.released && (
-                <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-muted backdrop-blur">{game.released}</span>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-muted backdrop-blur">{(game.released)}</span>
               )}
   
               <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-yellow-400 backdrop-blur">
@@ -89,6 +95,10 @@ export default async function GamePage({
                   Metacritic {game.metacritic}
                 </span>
               )}
+            </div>
+          
+            <div className="align-left mt-4">
+              <p className="text-left font-semibold text-sm text-white/80">A Game by {game.publishers[0].name}</p>
             </div>
           </div>
         </section>
@@ -200,6 +210,7 @@ export default async function GamePage({
         </div>
       </section>
 
+      <Footer />
     </AppShell>
   );
 }
