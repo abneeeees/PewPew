@@ -1,24 +1,46 @@
+export type Requirements = {
+  minimum?: string;
+  recommended?: string;
+};
+
 export type Platform = {
   platform: {
     id: number;
     name: string;
-    image_background: string;
+    requirements?: Requirements[];
   };
 
   released_at: string;
 };
 
-// interface for game data
+export type Store = {
+  id: number;
+};
+
+export type ratings = {
+  id: number;
+  title: string;
+  percent: number;
+}
+
 export type Game = {
   id: number;
   slug: string;
   name: string;
   released: string;
-  description?: string;
+  description_raw?: string;
   rating: number;
   metacritic: number | null;
   background_image: string;
+  background_image_additional: string;
+  tags: {
+    id: number;
+    name: string;
+  }[];
+  // genres: Tag[];
   platforms: Platform[];
+  stores: Store[];
+  ratings: ratings[];
 };
 
 // interface for games page
@@ -29,6 +51,10 @@ export type GamesPage = {
   previousPage: string | null;
   nextPage: string | null;
 };
+
+
+// ==================================================================================
+
 
 // interface for menu items
 export interface MenuItemProps {

@@ -40,13 +40,18 @@ export async function eachGame(slug: string): Promise<Game | null> {
   return {
     id: data.id,
     slug: data.slug,
-    description: data.description,
+    description_raw: data.description_raw,
     background_image: data.background_image,
+    background_image_additional: data.background_image_additional,
     name: data.name,
     released: data.released,
     rating: data.rating,
     metacritic: data.metacritic,
+    tags: data.tags,
+    // genres: data.genres,
     platforms: data.platforms,
+    stores: data.stores,
+    ratings: data.ratings,
   };
 }
 

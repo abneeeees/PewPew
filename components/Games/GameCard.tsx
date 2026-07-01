@@ -27,7 +27,7 @@ export default function GameCard({ game }: GameCardProps) {
         {/* Content */}
         <div className="absolute inset-x-0 bottom-0 z-10 p-4">
           <h3 className="line-clamp-2 text-base font-semibold text-white">
-            {game.slug}
+            {game.name}
           </h3>
   
           <div className="mt-2 flex items-center justify-between text-sm">

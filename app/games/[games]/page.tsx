@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PieChart } from '@mui/x-charts/PieChart';
 
 export async function generateMetadata({
   params,
@@ -37,113 +38,175 @@ export default async function GamePage({
 
   return (
     <AppShell>
-      <section className="relative h-64 overflow-hidden sm:h-80 lg:h-96">
-        {game.background_image ? (
-          <Image
-            src={game.background_image}
-            alt={game.name}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-surface to-background" />
-        )}
-
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
-
-        <div className="relative flex h-full flex-col justify-end px-4 pb-8 sm:px-6 lg:px-8">
-          <Link
-            href="/games"
-            className="mb-4 inline-flex w-fit items-center gap-1 text-sm text-muted transition-colors hover:text-foreground"
-          >
-            ← Back to games
-          </Link>
-
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            {game.name}
-          </h1>
-
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            {game.released && (
-              <span className="text-sm text-muted">{game.released}</span>
-            )}
-
-            <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-yellow-400 backdrop-blur">
-              ★ {game.rating.toFixed(1)}
-            </span>
-
-            {game.metacritic != null && (
-              <span
-                className={`rounded-full px-3 py-1 text-sm font-semibold ${
-                  game.metacritic >= 75
-                    ? "bg-green-500/20 text-green-400"
-                    : game.metacritic >= 50
-                      ? "bg-yellow-500/20 text-yellow-400"
-                      : "bg-red-500/20 text-red-400"
-                }`}
-              >
-                Metacritic {game.metacritic}
-              </span>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-border px-4 py-8 sm:px-6 lg:px-8">
-        <dl className="grid max-w-2xl gap-6 sm:grid-cols-3">
-          <div>
-            <dt className="text-sm font-medium text-muted">Release date</dt>
-            <dd className="mt-1 text-foreground">
-              {game.released ?? "Unknown"}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-sm font-medium text-muted">User rating</dt>
-            <dd className="mt-1 text-foreground">
-              {game.rating.toFixed(1)} / 5
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-sm font-medium text-muted">Metacritic</dt>
-            <dd className="mt-1 text-foreground">
-              {game.metacritic ?? "N/A"}
-            </dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className="px-4 py-8 sm:px-6 lg:px-8">
-        <div
-          className="flex flex-col text-lg gap-1.5"
-          dangerouslySetInnerHTML={{
-            __html: game.description ?? "",
-          }}
-        />
-      </section>
-
-      <section className="px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex gap-2">
-          {game.platforms.map(({ platform }) => (
-            <span
-              key={platform.id}
-              className="rounded bg-zinc-800 border border-zinc-700 px-auto py-auto"
+      {/* header */}
+        <section className="relative h-64 overflow-hidden sm:h-80 lg:h-96">
+          {game.background_image ? (
+            <Image
+              src={game.background_image}
+              alt={game.name}
+              fill
+              unoptimized
+              sizes="100vw"
+              className="z-0 opacity-20 blur-xs object-cover saturate-100 contrast-130 brightness-110"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-surface to-background" />
+          )}
+  
+          <div className="absolute opacity-40 inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
+  
+          <div className="relative flex h-full flex-col justify-end px-4 pb-8 sm:px-6 lg:px-8">
+            <Link
+              href="/games"
+              className="mb-55 inline-flex w-fit items-center gap-1 text-sm text-muted transition-colors hover:text-foreground"
             >
-              <span className="text-xl text-white">{platform.name}</span>
-              <Image
-                src={platform.image_background}
-                width={2000}
-                height={2000}
-                alt={game.name}
-                className="w-full h-auto"
-              />
+              ← Back to games
+            </Link>
+  
+            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              {game.name}
+            </h1>
+  
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              {game.released && (
+                <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-muted backdrop-blur">{game.released}</span>
+              )}
+  
+              <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-yellow-400 backdrop-blur">
+                ★ {game.rating.toFixed(1)}
+              </span>
+  
+              {game.metacritic != null && (
+                <span
+                  className={`rounded-full px-3 py-1 text-sm font-semibold ${
+                    game.metacritic >= 75
+                      ? "bg-green-500/20 text-green-400"
+                      : game.metacritic >= 50
+                        ? "bg-yellow-500/20 text-yellow-400"
+                        : "bg-red-500/20 text-red-400"
+                  }`}
+                >
+                  Metacritic {game.metacritic}
+                </span>
+              )}
+            </div>
+          </div>
+        </section>
+  
+        {/* tags and genre */}
+        <section className="px-4 py-8 sm:px-6 lg:px-8">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              {game.tags.map((gameTag) => (
+                <span
+                  className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/80 transition-colors hover:bg-white/20 backdrop-blur"
+                  key={gameTag.id}
+                >
+                  {gameTag.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+      {/* description */}
+        <section className="px-4 py-8 sm:px-6 lg:px-8">
+          <div>
+              <span className="font-sans font-medium text-sm text-muted">
+                Description
+              </span>
+             
+            <div className="rounded-xl mt-3 border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <pre className="whitespace-pre-wrap font-semilight rounded-lg bg-black/20 p-3 text-sm leading-6 text-white">
+                {game.description_raw}
+              </pre>
+            </div>
+          </div>
+        </section>
+  
+        {/* platforms */}
+        <section className="px-4 py-8 sm:px-6 lg:px-8">
+          <div>
+            <span className="font-sans font-medium text-sm text-muted">Platforms</span>
+          
+        
+            <div className="flex mt-3 flex-wrap items-center gap-2">
+              {game.platforms.map(({ platform }) => (
+                <span
+                  key={platform.id}
+                  className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/80 transition-colors hover:bg-white/20 backdrop-blur"
+                >
+                  {platform.name}
+                </span>
+              ))}
+            </div>
+          </div>
+      </section>
+
+      {/* Requirements */}
+      <section className="px-4 py-8 sm:px-6 lg:px-8">
+        <div>
+            <span className="font-sans font-medium text-sm text-muted">
+                Requirements
             </span>
-          ))}
+
+          <div className="mt-4 flex flex-col gap-4">
+            {game.platforms
+              .filter(({ requirements }) => 
+                requirements?.minimum || requirements?.recommended
+              )
+              .map(({ platform, requirements }) => (
+                
+                <div
+                  key={platform.id}
+                  className="rounded-xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
+                >
+                  
+                  <h2 className="mb-3 text-base font-semibold text-white">
+                    For {platform.name}
+                  </h2>
+            
+                  <div className="space-y-3">
+
+            
+                    {requirements?.minimum && (
+                      <div>
+                        <p className="mb-1 text-xs font-medium uppercase tracking-wide text-white/50">
+                          Minimum
+                        </p>
+            
+                        <pre className="whitespace-pre-wrap rounded-lg bg-black/20 p-3 text-sm leading-6 text-white/70">
+                          {requirements.minimum}
+                        </pre>
+                      </div>
+                    )}
+            
+                    {requirements?.recommended && (
+                      <div>
+                        <p className="mb-1 text-xs font-medium uppercase tracking-wide text-white/50">
+                          Recommended
+                        </p>
+            
+                        <pre className="whitespace-pre-wrap rounded-lg bg-black/20 p-3 text-sm leading-6 text-white/70">
+                          {requirements.recommended}
+                        </pre>
+                      </div>
+                    )}
+            
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       </section>
+
     </AppShell>
   );
 }
+
+// <div>
+//   <dt className="text-sm font-medium text-muted">Release date</dt>
+//   <dd className="mt-1 text-foreground">
+//     {game.released ?? "Unknown"}
+//   </dd>
+// </div>
