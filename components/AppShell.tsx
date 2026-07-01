@@ -22,7 +22,7 @@ export default function AppShell({
           onClose={() => setIsMenuOpen(false)}
         />
 
-        <main className="min-w-0 flex-1 overflow-auto">
+        <main className="min-w-0 flex-1 overflow-auto lg:ml-56">
           {children}
         </main>
       </div>

@@ -24,11 +24,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps,) {
       )}
 
       <aside
-        className={`fixed top-14 bottom-0 left-0 z-30 flex w-56 flex-col border-r border-border bg-surface transition-transform duration-200 lg:static lg:top-0 lg:z-0 lg:translate-x-0 ${
+        className={`fixed top-14 bottom-0 left-0 z-30 flex w-56 flex-col border-r border-border bg-surface transition-transform duration-200 lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <nav className="flex flex-1 flex-col gap-1 p-3">
+        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             
