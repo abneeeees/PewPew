@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**PewPew** is an online community for gamers where they can write blogs, check out game info, maintain their personal games collection etc
 
-## Getting Started
+---
 
-First, run the development server:
+## Routes
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- /home
+- /games
+- /games/individual-games
+- /community
+- /collections
+- /profile
+
+---
+
+## Running Locally 
+
+**Getting a RAWG API Key**
+1. Create an account on RAWG.
+2. Generate an API key.
+3. Copy `.env.example` to `.env.local`.
+4. Paste your key into the `RAWG` variable.
+
+```sh
+git clone https://github.com/abneeeees/PewPew.git
+
+cd PewPew
+
+cp .env.example .env.local
+
+# Edit .env.local and paste their API key
+
+bun install
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## File Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/app` : contains the routes
+- / components : contains `UI` `Global` `GamePage` components
+- / lib: Handles Data Fetching and Datasets
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## FunFact
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+*The name comes from the sound that guns make in games*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## [License](https://github.com/abneeeees/PewPew?tab=GPL-3.0-1-ov-file)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- This projects is licensed under [**GPLv3 license**](https://github.com/abneeeees/ablist/blob/main/LICENSE).
+- Users are free to run, modify, and distribute software while ensuring that all modified versions remain free and open.V
