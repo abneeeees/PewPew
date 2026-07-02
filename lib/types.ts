@@ -1,18 +1,18 @@
 import { Url } from "next/dist/shared/lib/router/router";
 
-export type Requirements = {
-  minimum?: string;
-  recommended?: string;
-};
-
 export type Platform = {
   platform: {
     id: number;
     name: string;
-    requirements?: Requirements[];
+    slug: string;
   };
 
   released_at: string;
+
+  requirements?: {
+    minimum?: string;
+    recommended?: string;
+  };
 };
 
 export type Store = {
@@ -23,6 +23,11 @@ export type ratings = {
   id: number;
   title: string;
   percent: number;
+}
+
+export type publishers = {
+  id: number
+  name: string
 }
 
 export type Game = {
@@ -43,7 +48,7 @@ export type Game = {
   platforms: Platform[];
   stores: Store[];
   ratings: ratings[];
-  publishers: string[];
+  publishers: publishers[];
   website?: Url;
 };
 
