@@ -78,12 +78,12 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
               Log In
             </Link>
     
-            <Link
+            {/*<Link
               href="/register"
               className="text-sm text-muted hover:text-foreground"
             >
               Register
-            </Link>
+            </Link>*/}
           </nav>
         </div>
     
