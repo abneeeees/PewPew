@@ -54,7 +54,6 @@ export type Game = {
   ratings: ratings[];
   publishers: publishers[];
   website?: Url;
-  screenshots: ScreenShots[];
 };
 
 // interface for games page
