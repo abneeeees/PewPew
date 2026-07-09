@@ -30,6 +30,11 @@ export type publishers = {
   name: string
 }
 
+export type ScreenShots = {
+  id: number;
+  image: string;  
+}
+
 export type Game = {
   id: number;
   slug: string;
@@ -44,12 +49,12 @@ export type Game = {
     id: number;
     name: string;
   }[];
-  // genres: Tag[];
   platforms: Platform[];
   stores: Store[];
   ratings: ratings[];
   publishers: publishers[];
   website?: Url;
+  screenshots: ScreenShots[];
 };
 
 // interface for games page
@@ -62,10 +67,10 @@ export type GamesPage = {
 };
 
 
-// ==================================================================================
 
 
-// interface for menu items
+// ================================= UI Types =======================================
+
 export interface MenuItemProps {
   label: string;
   href: string;
@@ -73,7 +78,6 @@ export interface MenuItemProps {
   active?: boolean;
 }
 
-// interface for sections
 export interface SectionProps {
   title: string
   description?: string
