@@ -1,5 +1,5 @@
 import AppShell from "@/components/AppShell";
-import { eachGame } from "@/lib/Data";
+import { eachGame, getGameScreenshots } from "@/lib/Data";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,6 +32,7 @@ export default async function GamePage({
 }) {
   const { games } = await params;
   const game = await eachGame(games);
+  const screenshots = await getGameScreenshots(games);
 
   if (!game) {
     notFound();
@@ -105,19 +106,45 @@ export default async function GamePage({
   
         {/* tags and genre */}
         <section className="px-4 py-8 sm:px-6 lg:px-8">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              {game.tags.map((gameTag) => (
-                <span
-                  className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/80 transition-colors hover:bg-white/20 backdrop-blur"
-                  key={gameTag.id}
-                >
-                  {gameTag.name}
-                </span>
-              ))}
+          <div className="flex flex-wrap items-center gap-2">
+            {game.tags.map((gameTag) => (
+              <span
+                className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/80 transition-colors hover:bg-white/20 backdrop-blur"
+                key={gameTag.id}
+              >
+                {gameTag.name}
+              </span>
+            ))}
+        </div>
+      </section>
+
+      {/* ScreenShots */}
+      <section className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {screenshots.map((screenshot) => (
+            <div
+              key={screenshot.id}
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-lg"
+            >
+              <Image
+                src={screenshot.image}
+                alt="Game screenshot"
+                width={1280}
+                height={720}
+                className="aspect-video h-full w-full object-cover transition duration-500 group-hover:scale-105"
+              />
+      
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      
+              {/* Optional zoom icon */}
+              <div className="absolute bottom-3 right-3 rounded-full bg-black/60 p-2 opacity-0 backdrop-blur transition-all duration-300 group-hover:opacity-100">
+                🔍
+              </div>
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
       {/* description */}
         <section className="px-4 py-8 sm:px-6 lg:px-8">
