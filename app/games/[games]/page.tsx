@@ -3,7 +3,7 @@ import { eachGame, getGameScreenshots } from "@/lib/Data";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Global/Footer";
-import GameDetailsClient from "./GameDetailsClient";
+import GameDetailsClient from "../../../components/Games/GameDetailsClient";
 
 export async function generateMetadata({
   params,
@@ -18,7 +18,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${game.name} | pewpew`,
+    title: `pewpew | ${game.name}`,
     description: `View ${game.name} on pewpew.`,
   };
 }
