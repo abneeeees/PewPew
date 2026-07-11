@@ -85,6 +85,8 @@ export default function Login() {
   // Switch tabs & reset state
   const handleTabChange = (signUpMode: boolean) => {
     setIsSignUp(signUpMode);
+    setShowPassword(false);
+    setShowConfirmPassword(false);
     setErrorMsg(null);
     setSuccessMsg(null);
     resetSignIn();
