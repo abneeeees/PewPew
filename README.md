@@ -63,3 +63,4 @@ bun run dev
 
 - This projects is licensed under [**GPLv3 license**](https://github.com/abneeeees/ablist/blob/main/LICENSE).
 - Users are free to run, modify, and distribute software while ensuring that all modified versions remain free and open.V
+
