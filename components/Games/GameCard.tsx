@@ -16,9 +16,10 @@ export default function GameCard({ game }: GameCardProps) {
           src={game.background_image}
           alt={game.slug}
           fill
+
           sizes="(max-width:768px) 50vw, (max-width:1280px) 25vw, 20vw"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
+          loading="eager"
         />
   
         {/* Gradient */}

@@ -39,7 +39,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps,) {
                 onClick={onClose}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                   isActive
-                    ? "bg-accent text-white transition-colors hover:bg-accent-hover"
+                    ? "bg-accent text-white transition-colors hover:bg-accent"
                     : "text-muted hover:bg-surface-raised hover:text-accent"
                 }`}
               >

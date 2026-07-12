@@ -278,7 +278,6 @@ export default function GameDetailsClient({ game, screenshots }: GameDetailsClie
 
             <div
               ref={tagsRef}
-              onScroll={checkTagScroll}
               className="flex gap-2 overflow-x-auto py-1 px-2 scroll-smooth snap-x select-none scrollbar-none"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
@@ -473,11 +472,11 @@ export default function GameDetailsClient({ game, screenshots }: GameDetailsClie
                   </span>
                 </div>
 
-                {game.website && (
+                {game.website && /^https?:\/\//i.test(String(game.website)) && (
                   <div>
                     <span className="block text-xs font-bold text-muted uppercase tracking-wider mb-1">Official Website</span>
-                    <a
-                      href={game.website.toString()}
+                    <Link
+                      href={String(game.website)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-accent hover:underline break-all inline-flex items-center gap-1 group/web"
@@ -486,7 +485,7 @@ export default function GameDetailsClient({ game, screenshots }: GameDetailsClie
                       <svg className="w-3.5 h-3.5 group-hover/web:translate-x-0.5 group-hover/web:-translate-y-0.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>

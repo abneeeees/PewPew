@@ -2,8 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
+// import UserLoggedIn from "./UserLoggedIn";
 
-export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) {
+import type { ReactNode } from "react";
+
+export default function Header({
+  onMenuToggle,
+  children,
+}: {
+  onMenuToggle?: () => void;
+  children?: ReactNode;
+}) {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
@@ -70,21 +79,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle?: () => void }) 
           </div>
     
           {/* Auth */}
-          <nav className="ml-auto hidden items-center gap-6 md:flex">
-            <Link
-              href="/login"
-              className="text-sm text-muted hover:text-foreground"
-            >
-              Log In
-            </Link>
-    
-            {/*<Link
-              href="/register"
-              className="text-sm text-muted hover:text-foreground"
-            >
-              Register
-            </Link>*/}
-          </nav>
+          { children }
         </div>
     
         {/* Mobile Search */}
