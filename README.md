@@ -4,9 +4,10 @@
 
 ## ScreenShots
 
-<img width="1852" height="2253" alt="Screenshot 2026-07-02 at 13-55-28 pewpew" src="https://github.com/user-attachments/assets/06eec2ae-5642-476c-a691-f58f714e53bf" />
+<img width="1920" height="1175" alt="Screenshot From 2026-07-12 23-55-51" src="https://github.com/user-attachments/assets/87d15913-d513-4ff6-8841-42a143b50c3a" />
 
-<img width="1852" height="2494" alt="Screenshot 2026-07-02 at 13-55-51 Limbo pewpew" src="https://github.com/user-attachments/assets/b263c542-fef7-4cbb-928a-c510ea81a463" />
+<img width="1920" height="1175" alt="Screenshot From 2026-07-12 23-56-05" src="https://github.com/user-attachments/assets/00688736-bb0e-4ecb-9fab-b16819fe01cc" />
+
 
 
 ---
