@@ -9,7 +9,7 @@ export default function AppShell({
   user
 }: {
     children: React.ReactNode;
-    user: ReactNode
+    user?: React.ReactNode
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
