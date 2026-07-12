@@ -1,3 +1,5 @@
+"use client";
+
 import GameCard from "./GameCard";
 import type { Game } from "@/lib/types";
 
@@ -6,8 +8,8 @@ interface GameGridProps {
   isLoading?: boolean;
   hasPreviousPage: boolean;
   hasNextPage: boolean;
-  onPreviousPage: () => void;
-  onNextPage: () => void;
+  onPreviousPage?: () => void;
+  onNextPage?: () => void;
 }
 
 // Skeleton card for loading state
@@ -28,8 +30,8 @@ export default function GameGrid({
   isLoading = false,
   hasPreviousPage,
   hasNextPage,
-  onPreviousPage,
-  onNextPage,
+  onPreviousPage = () => {},
+  onNextPage = () => {},
 }: GameGridProps) {
   return (
     <div className="flex flex-col gap-6">
