@@ -49,6 +49,11 @@ export type Game = {
     id: number;
     name: string;
   }[];
+  genres?: {
+    id: number;
+    name: string;
+    slug: string;
+  }[];
   platforms: Platform[];
   stores: Store[];
   ratings: ratings[];
@@ -65,8 +70,69 @@ export type GamesPage = {
   nextPage: string | null;
 };
 
+// ================================= Search & Filter Types =======================================
 
+export type SortOption =
+  | "-released"     // Newest first
+  | "released"      // Oldest first
+  | "-rating"       // Highest rated
+  | "rating"        // Lowest rated
+  | "name"          // A–Z
+  | "-name"         // Z–A
+  | "-added"        // Recently added
+  | "-metacritic"   // Highest metacritic
+  | "metacritic";   // Lowest metacritic
 
+export type SearchParams = {
+  search?: string;
+  genres?: string;        // comma-separated genre slugs
+  platforms?: string;     // comma-separated platform IDs
+  tags?: string;          // comma-separated tag slugs
+  publishers?: string;    // comma-separated publisher slugs
+  dates?: string;         // "YYYY-01-01,YYYY-12-31"
+  metacritic?: string;    // "min,max"
+  ordering?: SortOption;
+  page?: number;
+  page_size?: number;
+};
+
+export type Genre = {
+  id: number;
+  name: string;
+  slug: string;
+  games_count: number;
+};
+
+export type PlatformOption = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type SuggestionItem = {
+  id: number;
+  slug: string;
+  name: string;
+  background_image: string | null;
+  rating: number;
+  released: string;
+  publishers?: publishers[];
+  genres?: { id: number; name: string; slug: string }[];
+  type: "game" | "genre" | "publisher" | "tag";
+};
+
+export type ActiveFilters = {
+  search: string;
+  genres: string[];
+  platforms: string[];
+  tags: string[];
+  publishers: string[];
+  releaseYearMin: string;
+  releaseYearMax: string;
+  metacriticMin: string;
+  metacriticMax: string;
+  ordering: SortOption;
+};
 
 // ================================= UI Types =======================================
 
