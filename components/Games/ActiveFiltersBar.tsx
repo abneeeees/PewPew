@@ -21,6 +21,7 @@ interface ActiveFiltersBarProps {
   onRemove: (key: string, value?: string) => void;
   onClearAll: () => void;
   onOpenFilters: () => void;
+  filtersOpen?: boolean;
 }
 
 function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
@@ -48,6 +49,7 @@ export default function ActiveFiltersBar({
   onRemove,
   onClearAll,
   onOpenFilters,
+  filtersOpen = false,
 }: ActiveFiltersBarProps) {
   const chips: { key: string; label: string; value?: string }[] = [];
 
@@ -73,16 +75,16 @@ export default function ActiveFiltersBar({
   }
 
   const hasActiveFilters = chips.length > 0;
-  const isNonDefaultSort = filters.ordering !== "-released";
+  const isNonDefaultSort = filters.ordering !== "-metacritic";
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 sm:px-6 border-b border-white/5 min-h-[56px]">
-      {/* Filters Button */}
+      {/* Filters toggle button */}
       <button
         type="button"
         onClick={onOpenFilters}
         className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-semibold transition-all duration-200 shrink-0 cursor-pointer ${
-          hasActiveFilters || isNonDefaultSort
+          hasActiveFilters || isNonDefaultSort || filtersOpen
             ? "bg-accent/15 border-accent/40 text-accent hover:bg-accent/25"
             : "bg-surface-raised border-border text-muted hover:border-white/20 hover:text-white"
         }`}
@@ -96,6 +98,13 @@ export default function ActiveFiltersBar({
             {chips.length + (isNonDefaultSort ? 1 : 0)}
           </span>
         )}
+        {/* Chevron indicating open/closed */}
+        <svg
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${filtersOpen ? "rotate-180" : ""}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
       {/* Active Sort chip (if non-default) */}

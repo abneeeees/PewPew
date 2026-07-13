@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import SearchBar from "./SearchBar";
 import FilterPanel from "./FilterPanel";
 import ActiveFiltersBar from "./ActiveFiltersBar";
 import GameGrid from "./GameGrid";
 import type { ActiveFilters, Game, SortOption } from "@/lib/types";
 
+// ── Default state ────────────────────────────────────────────────────────────
 const DEFAULT_FILTERS: ActiveFilters = {
   search: "",
   genres: [],
@@ -18,9 +18,10 @@ const DEFAULT_FILTERS: ActiveFilters = {
   releaseYearMax: "",
   metacriticMin: "",
   metacriticMax: "",
-  ordering: "-released",
+  ordering: "-metacritic",          // ← Best Metacritic by default
 };
 
+// ── URL helpers ─────────────────────────────────────────────────────────────
 function filtersToURLParams(filters: ActiveFilters, page: number): URLSearchParams {
   const params = new URLSearchParams();
 
@@ -73,12 +74,13 @@ function parseURLToFilters(searchParams: URLSearchParams): { filters: ActiveFilt
       releaseYearMax,
       metacriticMin,
       metacriticMax,
-      ordering: (searchParams.get("ordering") as SortOption) || "-released",
+      ordering: (searchParams.get("ordering") as SortOption) || "-metacritic",
     },
     page: Number(searchParams.get("page")) || 1,
   };
 }
 
+// ── Main component ───────────────────────────────────────────────────────────
 export default function GamesClient() {
   const router = useRouter();
   const pathname = usePathname();
@@ -92,11 +94,20 @@ export default function GamesClient() {
   const [totalCount, setTotalCount] = useState(0);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
-  const [searchInput, setSearchInput] = useState(initialFilters.search);
+  const [showFilters, setShowFilters] = useState(false);   // mobile drawer
   const abortRef = useRef<AbortController | null>(null);
 
-  // Sync URL whenever filters/page change
+  // Re-sync filters when the URL changes from outside (e.g. navbar search)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const { filters: nextFilters, page: nextPage } = parseURLToFilters(searchParams);
+      setFilters(nextFilters);
+      setPage(nextPage);
+    }, 0);
+    return () => clearTimeout(id);
+  }, [searchParams]);
+
+  // ── URL push ─────────────────────────────────────────────────────────────
   const pushToURL = useCallback(
     (nextFilters: ActiveFilters, nextPage: number) => {
       const params = filtersToURLParams(nextFilters, nextPage);
@@ -106,7 +117,7 @@ export default function GamesClient() {
     [router, pathname]
   );
 
-  // Fetch games from proxy API
+  // ── Fetch ────────────────────────────────────────────────────────────────
   const fetchGames = useCallback(async (nextFilters: ActiveFilters, nextPage: number) => {
     if (abortRef.current) abortRef.current.abort();
     const controller = new AbortController();
@@ -116,10 +127,7 @@ export default function GamesClient() {
     try {
       const params = filtersToURLParams(nextFilters, nextPage);
       params.set("page_size", "20");
-      const res = await fetch(`/api/games?${params.toString()}`, {
-        signal: controller.signal,
-      });
-
+      const res = await fetch(`/api/games?${params.toString()}`, { signal: controller.signal });
       if (!res.ok) return;
       const data = await res.json();
       setGames(data.games || []);
@@ -135,35 +143,23 @@ export default function GamesClient() {
     }
   }, []);
 
-  // Fetch on filter/page change
-  // The lint rule fires because fetchGames internally calls setState.
-  // We use a zero-timeout to move the call out of the synchronous effect body.
   useEffect(() => {
     const id = setTimeout(() => fetchGames(filters, page), 0);
     return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, page]);
 
-  // Handle filter change: reset to page 1
-  const handleFiltersChange = (next: ActiveFilters) => {
+  // ── Handlers ─────────────────────────────────────────────────────────────
+  const handleFiltersChange = useCallback((next: ActiveFilters) => {
     setFilters(next);
     setPage(1);
     pushToURL(next, 1);
-  };
+  }, [pushToURL]);
 
-  // Handle search submit
-  const handleSearchSubmit = (value: string) => {
-    const next = { ...filters, search: value };
-    setSearchInput(value);
-    handleFiltersChange(next);
-  };
-
-  // Handle chip removal
   const handleRemoveFilter = (key: string, value?: string) => {
     const next = { ...filters };
     if (key === "search") {
       next.search = "";
-      setSearchInput("");
     } else if (key === "genres" && value) {
       next.genres = next.genres.filter((v) => v !== value);
     } else if (key === "platforms" && value) {
@@ -179,103 +175,78 @@ export default function GamesClient() {
       next.metacriticMin = "";
       next.metacriticMax = "";
     } else if (key === "ordering") {
-      next.ordering = "-released";
+      next.ordering = "-metacritic";
     }
     handleFiltersChange(next);
   };
 
-  const handleClearAll = () => {
-    setSearchInput("");
-    handleFiltersChange(DEFAULT_FILTERS);
-  };
+  const handleClearAll = () => handleFiltersChange(DEFAULT_FILTERS);
 
   const noResults = !isLoading && games.length === 0;
 
   return (
     <div className="flex flex-col min-h-0">
-      {/* Search Bar */}
-      <div className="px-4 py-4 sm:px-6 border-b border-white/5">
-        <SearchBar
-          value={searchInput}
-          onChange={setSearchInput}
-          onSubmit={handleSearchSubmit}
+
+      {/* ── Top filter area ───────────────────────────────────────────────── */}
+      <div className="border-b border-white/5">
+        {/* Active filters bar (chips + counts + filter toggle) */}
+        <ActiveFiltersBar
+          filters={filters}
+          totalCount={totalCount}
+          isLoading={isLoading}
+          onRemove={handleRemoveFilter}
+          onClearAll={handleClearAll}
+          onOpenFilters={() => setShowFilters((v) => !v)}
+          filtersOpen={showFilters}
         />
-      </div>
 
-      {/* Active Filters Bar */}
-      <ActiveFiltersBar
-        filters={filters}
-        totalCount={totalCount}
-        isLoading={isLoading}
-        onRemove={handleRemoveFilter}
-        onClearAll={handleClearAll}
-        onOpenFilters={() => setShowFilters(true)}
-      />
-
-      {/* Main layout: sidebar + grid */}
-      <div className="flex flex-1 min-h-0 relative">
-        {/* Desktop Sidebar */}
-        <aside
-          className={`hidden lg:flex flex-col w-72 shrink-0 border-r border-white/5 overflow-y-auto transition-all duration-300 sticky top-0 self-start max-h-screen`}
+        {/* Collapsible inline filter panel (desktop + mobile) */}
+        <div
+          className={`grid transition-all duration-300 ease-in-out ${
+            showFilters ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
         >
-          <FilterPanel
-            filters={filters}
-            onFiltersChange={handleFiltersChange}
-          />
-        </aside>
-
-        {/* Mobile Filter Drawer */}
-        {showFilters && (
-          <>
-            {/* Overlay */}
-            <div
-              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
-              onClick={() => setShowFilters(false)}
+          <div className="overflow-hidden">
+            <FilterPanel
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              onClose={() => setShowFilters(false)}
+              isHorizontal
             />
-            {/* Drawer */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-surface border-t border-white/10 rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh] animate-in slide-in-from-bottom duration-300">
-              <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mt-3 mb-1 shrink-0" />
-              <FilterPanel
-                filters={filters}
-                onFiltersChange={handleFiltersChange}
-                onClose={() => setShowFilters(false)}
-                isDrawer
-              />
-            </div>
-          </>
-        )}
-
-        {/* Game Grid Area */}
-        <main className="flex-1 px-4 py-5 sm:px-6 min-w-0">
-          {noResults ? (
-            <NoResults query={filters.search} onClear={handleClearAll} />
-          ) : (
-            <GameGrid
-              games={games}
-              isLoading={isLoading}
-              hasPreviousPage={page > 1}
-              hasNextPage={hasNextPage}
-              onPreviousPage={() => {
-                const next = page - 1;
-                setPage(next);
-                pushToURL(filters, next);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              onNextPage={() => {
-                const next = page + 1;
-                setPage(next);
-                pushToURL(filters, next);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            />
-          )}
-        </main>
+          </div>
+        </div>
       </div>
+
+      {/* ── Game Grid ────────────────────────────────────────────────────── */}
+      <main className="flex-1 px-4 py-5 sm:px-6 min-w-0">
+        {noResults ? (
+          <NoResults query={filters.search} onClear={handleClearAll} />
+        ) : (
+          <GameGrid
+            games={games}
+            isLoading={isLoading}
+            hasPreviousPage={page > 1}
+            hasNextPage={hasNextPage}
+            onPreviousPage={() => {
+              const next = page - 1;
+              setPage(next);
+              pushToURL(filters, next);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            onNextPage={() => {
+              const next = page + 1;
+              setPage(next);
+              pushToURL(filters, next);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        )}
+      </main>
     </div>
   );
 }
 
-// Empty state component
+// ── Empty state ──────────────────────────────────────────────────────────────
 function NoResults({ query, onClear }: { query: string; onClear: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center px-6">
