@@ -64,14 +64,21 @@ model VerificationToken {
 }
 
 model GameSearch {
-  game_id         Int      @id
-  name            String
-  slug            String?  @unique
-  description     String?
-  publishers      String?
-  tags            Json
-  platforms       Json
-  background_image String?
+  game_id          Int      @id
+  name             String
+  slug             String?  @unique
+
+  description      String?
+
+  tags             String[]
+  platforms        String[]
+
+  publishers       String[]
+
+  backgroundImage  String?
+
+  released         DateTime?
+  rating           Float?
 
   @@index([name])
   @@map("game_searches")
