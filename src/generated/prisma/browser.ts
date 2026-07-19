@@ -37,3 +37,8 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type VerificationToken = Prisma.VerificationTokenModel
+/**
+ * Model GameSearch
+ * 
+ */
+export type GameSearch = Prisma.GameSearchModel

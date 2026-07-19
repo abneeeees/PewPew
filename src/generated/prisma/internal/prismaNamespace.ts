@@ -387,7 +387,8 @@ export const ModelName = {
   User: 'User',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  GameSearch: 'GameSearch'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "gameSearch"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GameSearch: {
+      payload: Prisma.$GameSearchPayload<ExtArgs>
+      fields: Prisma.GameSearchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GameSearchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GameSearchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>
+        }
+        findFirst: {
+          args: Prisma.GameSearchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GameSearchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>
+        }
+        findMany: {
+          args: Prisma.GameSearchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>[]
+        }
+        create: {
+          args: Prisma.GameSearchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>
+        }
+        createMany: {
+          args: Prisma.GameSearchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GameSearchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>[]
+        }
+        delete: {
+          args: Prisma.GameSearchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>
+        }
+        update: {
+          args: Prisma.GameSearchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>
+        }
+        deleteMany: {
+          args: Prisma.GameSearchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GameSearchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GameSearchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>[]
+        }
+        upsert: {
+          args: Prisma.GameSearchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GameSearchPayload>
+        }
+        aggregate: {
+          args: Prisma.GameSearchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGameSearch>
+        }
+        groupBy: {
+          args: Prisma.GameSearchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GameSearchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GameSearchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GameSearchCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -790,6 +865,22 @@ export const VerificationTokenScalarFieldEnum = {
 } as const
 
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+export const GameSearchScalarFieldEnum = {
+  game_id: 'game_id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  tags: 'tags',
+  platforms: 'platforms',
+  publishers: 'publishers',
+  backgroundImage: 'backgroundImage',
+  released: 'released',
+  rating: 'rating'
+} as const
+
+export type GameSearchScalarFieldEnum = (typeof GameSearchScalarFieldEnum)[keyof typeof GameSearchScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -991,6 +1082,7 @@ export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
   session?: Prisma.SessionOmit
   verificationToken?: Prisma.VerificationTokenOmit
+  gameSearch?: Prisma.GameSearchOmit
 }
 
 /* Types for Logging */

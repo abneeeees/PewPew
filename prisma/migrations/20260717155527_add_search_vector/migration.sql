@@ -89,14 +89,25 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 ALTER TABLE "game_searches"
-ADD COLUMN search_vector tsvector
-GENERATED ALWAYS AS (
-    setweight(to_tsvector('english', coalesce("name", '')), 'A') ||
-    setweight(to_tsvector('english', coalesce("description", '')), 'B') ||
-    setweight(to_tsvector('english', array_to_string("tags", ' ')), 'C') ||
-    setweight(to_tsvector('english', array_to_string("platforms", ' ')), 'C') ||
-    setweight(to_tsvector('english', array_to_string("publishers", ' ')), 'C')
-) STORED;
+ADD COLUMN search_vector tsvector;
+
+CREATE OR REPLACE FUNCTION game_searches_search_vector_update() RETURNS trigger AS $$
+BEGIN
+    NEW.search_vector :=
+        setweight(to_tsvector('english', coalesce(NEW."name", '')), 'A') ||
+        setweight(to_tsvector('english', coalesce(NEW."description", '')), 'B') ||
+        setweight(to_tsvector('english', array_to_string(NEW."tags", ' ')), 'C') ||
+        setweight(to_tsvector('english', array_to_string(NEW."platforms", ' ')), 'C') ||
+        setweight(to_tsvector('english', array_to_string(NEW."publishers", ' ')), 'C');
+    RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER game_searches_search_vector_trigger
+BEFORE INSERT OR UPDATE ON "game_searches"
+FOR EACH ROW EXECUTE FUNCTION game_searches_search_vector_update();
+
+UPDATE "game_searches" SET search_vector = NULL;
 
 CREATE INDEX game_search_vector_idx
 ON "game_searches"
