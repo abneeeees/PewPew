@@ -1,9 +1,3 @@
--- Drop legacy tables from the initial migration (schema was replaced for Auth.js)
-DROP TABLE IF EXISTS "Rating";
-DROP TABLE IF EXISTS "UserGame";
-DROP TABLE IF EXISTS "Game";
-DROP TABLE IF EXISTS "User";
-
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -52,6 +46,22 @@ CREATE TABLE "verification_tokens" (
     "expires" TIMESTAMP(3) NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "game_searches" (
+    "game_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "slug" TEXT,
+    "description" TEXT,
+    "tags" TEXT[],
+    "platforms" TEXT[],
+    "publishers" TEXT[],
+    "backgroundImage" TEXT,
+    "released" TIMESTAMP(3),
+    "rating" DOUBLE PRECISION,
+
+    CONSTRAINT "game_searches_pkey" PRIMARY KEY ("game_id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -64,8 +74,45 @@ CREATE UNIQUE INDEX "sessions_session_token_key" ON "sessions"("session_token");
 -- CreateIndex
 CREATE UNIQUE INDEX "verification_tokens_identifier_token_key" ON "verification_tokens"("identifier", "token");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "game_searches_slug_key" ON "game_searches"("slug");
+
+-- CreateIndex
+CREATE INDEX "game_searches_name_idx" ON "game_searches"("name");
+
 -- AddForeignKey
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+ALTER TABLE "game_searches"
+ADD COLUMN search_vector tsvector;
+
+CREATE OR REPLACE FUNCTION game_searches_search_vector_update() RETURNS trigger AS $$
+BEGIN
+    NEW.search_vector :=
+        setweight(to_tsvector('english', coalesce(NEW."name", '')), 'A') ||
+        setweight(to_tsvector('english', coalesce(NEW."description", '')), 'B') ||
+        setweight(to_tsvector('english', array_to_string(NEW."tags", ' ')), 'C') ||
+        setweight(to_tsvector('english', array_to_string(NEW."platforms", ' ')), 'C') ||
+        setweight(to_tsvector('english', array_to_string(NEW."publishers", ' ')), 'C');
+    RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER game_searches_search_vector_trigger
+BEFORE INSERT OR UPDATE ON "game_searches"
+FOR EACH ROW EXECUTE FUNCTION game_searches_search_vector_update();
+
+UPDATE "game_searches" SET search_vector = NULL;
+
+CREATE INDEX game_search_vector_idx
+ON "game_searches"
+USING GIN (search_vector);
+
+CREATE INDEX game_name_trgm_idx
+ON "game_searches"
+USING GIN (name gin_trgm_ops);

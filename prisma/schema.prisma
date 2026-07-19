@@ -62,3 +62,24 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
+
+model GameSearch {
+  game_id          Int      @id
+  name             String
+  slug             String?  @unique
+
+  description      String?
+
+  tags             String[]
+  platforms        String[]
+
+  publishers       String[]
+
+  backgroundImage  String?
+
+  released         DateTime?
+  rating           Float?
+
+  @@index([name])
+  @@map("game_searches")
+}
