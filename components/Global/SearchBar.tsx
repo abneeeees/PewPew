@@ -30,6 +30,7 @@ export function SearchBox() {
   const abortRef = useRef<AbortController | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const listboxId = "search-results";
+  const inputRef = useRef<HTMLInputElement>(null); 
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -46,6 +47,34 @@ export function SearchBox() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      // dont target if user is typing
+      const target = event.target as HTMLElement;
+      
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return
+      }
+
+      if (event.key === "/") {
+        event.preventDefault();
+  
+        inputRef.current?.focus();
+  
+        setOpen(true);
+      }
+    }
+  
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [query, results]);
+  
   useEffect(() => {
     const trimmed = query.trim();
     if (trimmed.length < 2) return;
@@ -164,6 +193,7 @@ export function SearchBox() {
           />
         </svg>
         <input
+          ref={inputRef}
           type="search"
           role="combobox"
           value={query}
@@ -172,7 +202,7 @@ export function SearchBox() {
             if (results.length > 0 || query.trim().length >= 2) setOpen(true);
           }}
           onKeyDown={onKeyDown}
-          placeholder="Search games..."
+          placeholder="press / to search games"
           aria-label="Search games"
           aria-expanded={showDropdown}
           aria-controls={listboxId}
@@ -183,11 +213,6 @@ export function SearchBox() {
           autoComplete="off"
           className="w-full rounded-lg border border-border bg-surface py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted outline-none transition-colors focus:border-accent"
         />
-        {loading && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted">
-            …
-          </span>
-        )}
       </div>
 
       {showDropdown && (
