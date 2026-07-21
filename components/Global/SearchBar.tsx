@@ -6,7 +6,7 @@ import {
   useEffect,
   useRef,
   useState,
-  type KeyboardEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 
 interface SearchResult {
@@ -49,7 +49,6 @@ export function SearchBox() {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      // dont target if user is typing
       const target = event.target as HTMLElement;
       
       if (
@@ -57,14 +56,12 @@ export function SearchBox() {
         target.tagName === "TEXTAREA" ||
         target.isContentEditable
       ) {
-        return
+        return;
       }
 
       if (event.key === "/") {
         event.preventDefault();
-  
         inputRef.current?.focus();
-  
         setOpen(true);
       }
     }
@@ -72,8 +69,8 @@ export function SearchBox() {
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-    }
-  }, [query, results]);
+    };
+  }, []);
   
   useEffect(() => {
     const trimmed = query.trim();
@@ -142,7 +139,7 @@ export function SearchBox() {
     router.push(`/games/${result.slug}`);
   }
 
-  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+  function onKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
     if (!open || results.length === 0) {
       if (event.key === "Escape") setOpen(false);
       return;
