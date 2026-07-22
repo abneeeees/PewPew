@@ -1,7 +1,30 @@
 import Link from "next/link";
 import Shuffle from "./Shuffle";
+import { auth } from "@/app/auth";
+import { ArrowRight } from "lucide-react";
+
+
+async  function userState() {
+  const session = await auth();
+  if (session)
+    return (
+      <p className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all hover:bg-accent-hover hover:shadow-[0_0_30px_rgba(239,68,68,0.35)]">
+        Welcome {session.user?.name}
+      </p>
+    )
+
+  return (
+    <Link
+      href="/login"
+      className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all hover:bg-accent-hover hover:shadow-[0_0_30px_rgba(239,68,68,0.35)]"
+    >
+      Start logging
+    </Link>
+  )
+}
 
 export default function Hero() {
+  // const arrow = "▓▒░══━ ╾━╾━╾━╾━ ╾━" + <ArrowRight className="h-4 w-4" />
   return (
     <section className="relative overflow-hidden border-b border-border">
       {/* Background layers */}
@@ -35,8 +58,9 @@ export default function Hero() {
                   <span className="text-accent animate-ping opacity-75"> * </span>
               </h1>
 
+              <div className="flex items-center">
                 <Shuffle
-                  text="▓▒░══━ ╾━╾━╾━╾━ ╾━⮞"
+                  text="▓▒░══━ ╾━╾━╾━╾━ ╾━"
                   shuffleDirection="right"
                   duration={0.35}
                   animationMode="evenodd"
@@ -44,20 +68,20 @@ export default function Hero() {
                   ease="power3.out"
                   stagger={0.05}
                   threshold={0.1}
-                  triggerOnce={true}
+                  triggerOnce
                   triggerOnHover
-                  respectReducedMotion={true}
-                  loop={true}
+                  respectReducedMotion
+                  loop
                   loopDelay={0}
                 />
+              
+                <span className="-translate-y-[1px] text-white text-lg leading-none shrink-0">
+                  ➤
+                </span>
+              </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/login"
-                  className="rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all hover:bg-accent-hover hover:shadow-[0_0_30px_rgba(239,68,68,0.35)]"
-                >
-                  Start logging
-                </Link>
+                {userState()}
                 <Link
                   href="/games"
                   className="rounded-lg border border-border bg-surface-raised px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-muted/50 hover:bg-surface"
