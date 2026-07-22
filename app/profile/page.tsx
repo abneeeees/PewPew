@@ -2,6 +2,7 @@ import AppShell from "@/components/AppShell";
 import { auth } from "../auth";
 import Image from "next/image";
 import SignOutButton from "../../components/Auth/SignOut";
+import UserProfile from "@/components/Profie/UserProfile"
 
 export default async function Profile() {
   const session = await auth();
@@ -9,7 +10,7 @@ export default async function Profile() {
   return (
     <AppShell>
       <div className="flex flex-col">
-        {session &&
+        {/*{session &&
           <div>
             <p>You are signed in as {session.user?.name}</p >
             <p>You are signed in as {session.user?.email}</p >
@@ -23,7 +24,8 @@ export default async function Profile() {
 
             <SignOutButton />
           </div>
-        }
+        }*/}
+        {<UserProfile/>}
       </div>
     </AppShell>
   );

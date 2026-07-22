@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Shuffle from "./Shuffle";
 import { auth } from "@/app/auth";
-import { ArrowRight } from "lucide-react";
-
 
 async  function userState() {
   const session = await auth();
