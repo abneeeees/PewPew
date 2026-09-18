@@ -1,4 +1,4 @@
-import { Url } from "next/dist/shared/lib/router/router";
+// import { Url } from "next/dist/shared/lib/router/router";
 
 export type Platform = {
   platform: {
@@ -53,7 +53,7 @@ export type Game = {
   stores: Store[];
   ratings: ratings[];
   publishers: publishers[];
-  website?: Url;
+  website?: URL;
 };
 
 // interface for games page
